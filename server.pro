@@ -17,7 +17,8 @@ SOURCES += \
 
 HEADERS += \
     Controller/datamanager.h \
-    multiprocess/sharemem.h
+    multiprocess/sharemem.h \
+    utils/sharememdef.h
 
 DISTFILES += \
     data/data.json \

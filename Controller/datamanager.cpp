@@ -6,7 +6,11 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QDebug>
+#include <string>
 
+using namespace std;
+
+const string datas[7] = {"index", "name", "assem", "cplus", "js", "qml", "openGL"};
 static DataManager* m_instance;
 
 DataManager::DataManager() {}
@@ -23,7 +27,7 @@ DataManager* DataManager::getInstance() {
 
 bool DataManager::initDataFromJsonFile()
 {
-    QFile json_file("/home/avn/app1/server/data/employee.json");
+    QFile json_file("/home/hai/processApp/server/data/employee.json");
     QString json_string;
 
     if (json_file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -37,30 +41,14 @@ bool DataManager::initDataFromJsonFile()
 
     QJsonArray jArr = json_doc.array();
     QJsonValue val;
+
     for (auto jsonObj : jArr) {
         QJsonObject obj;
 
-        val = jsonObj.toObject().value("index");
-        obj.insert("index", jsonObj.toObject().value("index"));
-
-        val = jsonObj.toObject().value("name");
-        obj.insert("name", jsonObj.toObject().value("name"));
-
-        val = jsonObj.toObject().value("assem");
-        obj.insert("assem", jsonObj.toObject().value("assem"));
-
-        val = jsonObj.toObject().value("cplus");
-        obj.insert("cplus", jsonObj.toObject().value("cplus"));
-
-        val = jsonObj.toObject().value("js");
-        obj.insert("js", jsonObj.toObject().value("js"));
-
-        val = jsonObj.toObject().value("qml");
-        obj.insert("qml", jsonObj.toObject().value("qml"));
-
-        val = jsonObj.toObject().value("openGL");
-        obj.insert("openGL", jsonObj.toObject().value("openGL"));
-
+        for (int i = 0; i < 7; i++) {
+            val = jsonObj.toObject().value(datas[i].c_str());
+            obj.insert(datas[i].c_str(), jsonObj.toObject().value(datas[i].c_str()));
+        }
         m_jsonData.append(obj);
     }
 
