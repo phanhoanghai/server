@@ -5,6 +5,6 @@ using namespace std;
 
 int main()
 {
-    cout << "Hello World!" << endl;
+    DataManager::getInstance()->initDataFromJsonFile();
     return 0;
 }

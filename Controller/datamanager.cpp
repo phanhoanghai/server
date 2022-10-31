@@ -1,15 +1,17 @@
 #include "datamanager.h"
 
-DataManager::DataManager() :
-    m_data(""), m_jsonData("")
-{
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QDebug>
 
-}
+static DataManager* m_instance;
 
-DataManager::~DataManager()
-{
+DataManager::DataManager() {}
 
-}
+DataManager::~DataManager() {}
 
 
 DataManager* DataManager::getInstance() {
@@ -19,33 +21,52 @@ DataManager* DataManager::getInstance() {
     return m_instance;
 }
 
-bool DataManager::initDefaultRawData()
+bool DataManager::initDataFromJsonFile()
 {
-    m_data = "[{\"index\":0,\"name\":\"Torres Figueroa\",\"assem\":1,\"cplus\":2,\"js\":4,\"qml\":2,\"openGL\":1},"
-             "{\"index\":1,\"name\":\"Noemi Cross\",\"assem\":0,\"cplus\":4,\"js\":2,\"qml\":5,\"openGL\":4},"
-             "{\"index\":2,\"name\":\"Ashlee Lowe\",\"assem\":2,\"cplus\":3,\"js\":1,\"qml\":2,\"openGL\":4},"
-             "{\"index\":3,\"name\":\"Shepard Cohen\",\"assem\":0,\"cplus\":0,\"js\":5,\"qml\":3,\"openGL\":0},"
-             "{\"index\":4,\"name\":\"Rush Meadows\",\"assem\":2,\"cplus\":0,\"js\":2,\"qml\":5,\"openGL\":0},"
-             "{\"index\":5,\"name\":\"Leta Hinton\",\"assem\":2,\"cplus\":4,\"js\":4,\"qml\":5,\"openGL\":2},"
-             "{\"index\":6,\"name\":\"Lawanda Brown\",\"assem\":1,\"cplus\":3,\"js\":2,\"qml\":4,\"openGL\":1},"
-             "{\"index\":7,\"name\":\"King Valenzuela\",\"assem\":4,\"cplus\":3,\"js\":4,\"qml\":0,\"openGL\":5},"
-             "{\"index\":8,\"name\":\"Kathie Farmer\",\"assem\":1,\"cplus\":1,\"js\":5,\"qml\":1,\"openGL\":5},"
-             "{\"index\":9,\"name\":\"Evelyn Malone\",\"assem\":1,\"cplus\":5,\"js\":0,\"qml\":3,\"openGL\":0},"
-             "{\"index\":10,\"name\":\"Melton Burgess\",\"assem\":4,\"cplus\":1,\"js\":1,\"qml\":2,\"openGL\":5},"
-             "{\"index\":11,\"name\":\"Meyer Boyle\",\"assem\":3,\"cplus\":2,\"js\":0,\"qml\":0,\"openGL\":1},"
-             "{\"index\":12,\"name\":\"Celeste England\",\"assem\":1,\"cplus\":5,\"js\":5,\"qml\":2,\"openGL\":4},"
-             "{\"index\":13,\"name\":\"Lynch Fernandez\",\"assem\":0,\"cplus\":4,\"js\":2,\"qml\":1,\"openGL\":2},"
-             "{\"index\":14,\"name\":\"Cassandra Fuller\",\"assem\":2,\"cplus\":0,\"js\":2,\"qml\":5,\"openGL\":5},"
-             "{\"index\":15,\"name\":\"Roman Molina\",\"assem\":4,\"cplus\":1,\"js\":0,\"qml\":2,\"openGL\":5},"
-             "{\"index\":16,\"name\":\"Terrell Schneider\",\"assem\":1,\"cplus\":2,\"js\":0,\"qml\":4,\"openGL\":4}]\";";
+    QFile json_file("/home/avn/app1/server/data/employee.json");
+    QString json_string;
 
-    if (m_data.length() > 0) return true;
-    return false;
-}
+    if (json_file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        json_string = json_file.readAll();
+        json_file.close();
+    } else {
+        qDebug()<< "file not found";
+    }
 
-bool DataManager::convertRawToJsonData(QString &data)
-{
+    auto json_doc = QJsonDocument::fromJson(json_string.toUtf8());
 
+    QJsonArray jArr = json_doc.array();
+    QJsonValue val;
+    for (auto jsonObj : jArr) {
+        QJsonObject obj;
+
+        val = jsonObj.toObject().value("index");
+        obj.insert("index", jsonObj.toObject().value("index"));
+
+        val = jsonObj.toObject().value("name");
+        obj.insert("name", jsonObj.toObject().value("name"));
+
+        val = jsonObj.toObject().value("assem");
+        obj.insert("assem", jsonObj.toObject().value("assem"));
+
+        val = jsonObj.toObject().value("cplus");
+        obj.insert("cplus", jsonObj.toObject().value("cplus"));
+
+        val = jsonObj.toObject().value("js");
+        obj.insert("js", jsonObj.toObject().value("js"));
+
+        val = jsonObj.toObject().value("qml");
+        obj.insert("qml", jsonObj.toObject().value("qml"));
+
+        val = jsonObj.toObject().value("openGL");
+        obj.insert("openGL", jsonObj.toObject().value("openGL"));
+
+        m_jsonData.append(obj);
+    }
+
+    // init text data
+    m_textData = jsonToText(m_jsonData);
+    return true;
 }
 
 bool DataManager::updateData()
@@ -53,7 +74,22 @@ bool DataManager::updateData()
 
 }
 
-QJsonObject DataManager::getJsonData()
+QString DataManager::jsonToText(QJsonArray &data)
 {
-
+    QJsonDocument doc;
+    doc.setArray(data);
+    QString stringdata(doc.toJson());
+    return stringdata;
 }
+
+QJsonArray DataManager::getJsonData()
+{
+    return m_jsonData;
+}
+
+QString DataManager::getTextData()
+{
+    return m_textData;
+}
+
+

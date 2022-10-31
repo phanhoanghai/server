@@ -1,8 +1,8 @@
 #ifndef DATAMANAGER_H
 #define DATAMANAGER_H
 
-#include <QJsonObject>
 #include <QString>
+#include <QJsonArray>
 
 class DataManager
 {
@@ -13,18 +13,18 @@ private:
 public:
     static DataManager* getInstance();
 
-private:
-    static DataManager* m_instance;
-
 public:
-    bool initDefaultRawData();
-    bool convertRawToJsonData(QString& data);
+    bool initDataFromJsonFile();
     bool updateData();
-    QJsonObject getJsonData();
+    QJsonArray getJsonData();
+    QString getTextData();
 
 private:
-    QString m_data;
-    QString m_jsonData;
+    QString jsonToText(QJsonArray& data);
+
+private:
+    QJsonArray m_jsonData;
+    QString m_textData;
 };
 
 #endif // DATAMANAGER_H
