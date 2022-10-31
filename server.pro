@@ -8,12 +8,16 @@ CONFIG += console
 CONFIG -= app_bundle
 TARGET = main
 
+LIBS += -lrt
+
 SOURCES += \
         Controller/datamanager.cpp \
-        main.cpp
+        main.cpp \
+        multiprocess/sharemem.cpp
 
 HEADERS += \
-    Controller/datamanager.h
+    Controller/datamanager.h \
+    multiprocess/sharemem.h
 
 DISTFILES += \
     data/data.json \
