@@ -27,7 +27,7 @@ DataManager* DataManager::getInstance() {
 
 bool DataManager::initDataFromJsonFile()
 {
-    QFile json_file("/home/avn/app1/server/data/employee.json");
+    QFile json_file("../server/data/employee.json");
     QString json_string;
 
     if (json_file.open(QIODevice::ReadOnly | QIODevice::Text)){
