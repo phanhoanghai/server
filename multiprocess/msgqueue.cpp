@@ -3,6 +3,8 @@
 #include "multiprocess/connection.h"
 
 using namespace std;
+using namespace app_msg;
+
 static MsgQueue* m_instance;
 
 char in_buffer [MSG_BUFFER_SIZE];
@@ -38,18 +40,33 @@ void MsgQueue::initMsgQueue()
 
 void MsgQueue::listerningMsg()
 {
-    //    qDebug("thread : %d", this_thread::get_id());
+    app_msg::Msg msg;
     while (1) {
-        if (mq_receive (qd_server, in_buffer, MSG_BUFFER_SIZE, NULL) == -1) {
+        if (mq_receive (qd_server, (char*)& msg, MAX_MSG_SIZE, NULL) == -1) {
             perror ("Server: mq_receive");
             exit (1);
         }
-
-        printf ("Server: message received.\n");
+        char* client_name = msg.client == CLIENT_1 ? (char*)CLIENT1_QUEUE_NAME : (char*)CLIENT2_QUEUE_NAME;
+        qDebug() << "Server: message received : " << msg.msgType << "from" << client_name;
+        sendingMsg(msg);
     }
 }
 
-void MsgQueue::sendingMsg()
+void MsgQueue::sendingMsg(Msg msg)
+{
+    char* client_name = msg.client == CLIENT_1 ? (char*)CLIENT1_QUEUE_NAME : (char*)CLIENT2_QUEUE_NAME;
+
+    if ((qd_client = mq_open (client_name, O_WRONLY)) == 1) {
+        perror ("Server: Not able to open client queue");
+        return;
+    }
+
+    if (mq_send (qd_client, (char *) &msg, sizeof(msg), 0) == -1) {
+        perror ("Server: Not able to send message to client");
+    }
+}
+
+void MsgQueue::closeMesageQueue()
 {
 
 }

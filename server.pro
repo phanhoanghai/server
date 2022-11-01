@@ -21,6 +21,7 @@ HEADERS += \
     Controller/datamanager.h \
     Controller/servicecontroller.h \
     multiprocess/connection.h \
+    multiprocess/message.h \
     multiprocess/msgqueue.h \
     multiprocess/sharemem.h \
     utils/sharememdef.h

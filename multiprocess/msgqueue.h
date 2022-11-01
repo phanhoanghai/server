@@ -11,6 +11,7 @@
 #include <mqueue.h>
 #include <thread>
 #include <chrono>
+#include "multiprocess/message.h"
 
 class MsgQueue
 {
@@ -23,7 +24,8 @@ public:
 public:
     void initMsgQueue();
     void listerningMsg();
-    void sendingMsg();
+    void sendingMsg(app_msg::Msg msg);
+    void closeMesageQueue();
 
 private:
     mqd_t qd_server, qd_client;   // queue descriptors
