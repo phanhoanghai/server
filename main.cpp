@@ -8,6 +8,6 @@ int main()
 {
     DataManager::getInstance()->initDataFromJsonFile();
     ShareMem::getInstance()->initShareMem();
-    qDebug("%s", DataManager::getInstance()->getTextData().toStdString().c_str());
+//    qDebug("%s", DataManager::getInstance()->getTextData().toStdString().c_str());
     return 0;
 }

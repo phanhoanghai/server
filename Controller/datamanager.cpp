@@ -11,7 +11,7 @@
 using namespace std;
 
 const string datas[7] = {"index", "name", "assem", "cplus", "js", "qml", "openGL"};
-static DataManager* m_instance;
+static DataManager* m_instance = nullptr;
 
 DataManager::DataManager() {}
 
@@ -27,7 +27,7 @@ DataManager* DataManager::getInstance() {
 
 bool DataManager::initDataFromJsonFile()
 {
-    QFile json_file("/home/hai/processApp/server/data/employee.json");
+    QFile json_file("/home/avn/app1/server/data/employee.json");
     QString json_string;
 
     if (json_file.open(QIODevice::ReadOnly | QIODevice::Text)){
@@ -44,7 +44,6 @@ bool DataManager::initDataFromJsonFile()
 
     for (auto jsonObj : jArr) {
         QJsonObject obj;
-
         for (int i = 0; i < 7; i++) {
             val = jsonObj.toObject().value(datas[i].c_str());
             obj.insert(datas[i].c_str(), jsonObj.toObject().value(datas[i].c_str()));
