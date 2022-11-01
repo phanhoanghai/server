@@ -1,4 +1,6 @@
 #include "msgqueue.h"
+#include <QDebug>
+#include "multiprocess/connection.h"
 
 using namespace std;
 static MsgQueue* m_instance;
@@ -36,6 +38,7 @@ void MsgQueue::initMsgQueue()
 
 void MsgQueue::listerningMsg()
 {
+    //    qDebug("thread : %d", this_thread::get_id());
     while (1) {
         if (mq_receive (qd_server, in_buffer, MSG_BUFFER_SIZE, NULL) == -1) {
             perror ("Server: mq_receive");
@@ -43,21 +46,6 @@ void MsgQueue::listerningMsg()
         }
 
         printf ("Server: message received.\n");
-
-        if ((qd_client = mq_open (in_buffer, O_WRONLY)) == 1) {
-            perror ("Server: Not able to open client queue");
-            continue;
-        }
-
-        sprintf (out_buffer, "%ld", token_number);
-
-        if (mq_send (qd_client, out_buffer, strlen (out_buffer) + 1, 0) == -1) {
-            perror ("Server: Not able to send message to client");
-            continue;
-        }
-
-        printf ("Server: response sent to client.\n");
-        token_number++;
     }
 }
 
