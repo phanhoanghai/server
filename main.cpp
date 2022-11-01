@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Controller/datamanager.h"
 #include "multiprocess/sharemem.h"
+#include "multiprocess/msgqueue.h"
 
 using namespace std;
 
@@ -8,6 +9,6 @@ int main()
 {
     DataManager::getInstance()->initDataFromJsonFile();
     ShareMem::getInstance()->initShareMem();
-//    qDebug("%s", DataManager::getInstance()->getTextData().toStdString().c_str());
+    MsgQueue::getInstance()->initMsgQueue();
     return 0;
 }

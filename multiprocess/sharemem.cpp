@@ -20,7 +20,7 @@ bool ShareMem::initShareMem()
 {
     int shm_fd;
     string data = DataManager::getInstance()->getTextData().toStdString();
-    qDebug("%s", data.c_str());
+//    qDebug("%s", data.c_str());
     const char* message_0 = data.c_str();
     void* ptr;
 

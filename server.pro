@@ -12,11 +12,15 @@ LIBS += -lrt
 
 SOURCES += \
         Controller/datamanager.cpp \
+        Controller/servicecontroller.cpp \
         main.cpp \
+        multiprocess/msgqueue.cpp \
         multiprocess/sharemem.cpp
 
 HEADERS += \
     Controller/datamanager.h \
+    Controller/servicecontroller.h \
+    multiprocess/msgqueue.h \
     multiprocess/sharemem.h \
     utils/sharememdef.h
 
